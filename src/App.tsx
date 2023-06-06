@@ -1,15 +1,15 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
+import TaggableImage from './components/TaggableImage';
 
 const App: FC = () => {
-  const [count, setCount] = useState(1);
-
   return (
     <div>
-      <h1 className="m-3 bg-blue-300 text-3xl font-bold underline">Hello World</h1>
-      <p>{count}</p>
-      <button type="button" onClick={() => setCount(count + 1)}>
-        add
-      </button>
+      <TaggableImage
+        imageSrc="waldo.png"
+        alt="black bg with white letters"
+        offset={10}
+        hiddenObjectLocations={[{ name: 'A', location: [50, 60] }]}
+      />
     </div>
   );
 };
