@@ -2,7 +2,7 @@ const getPixelLocation = (
   imgRef: HTMLImageElement,
   pageX: number,
   pageY: number
-): { pixelX: number; pixelY: number } => {
+): { pixelX: number; pixelY: number; cursorX: number; cursorY: number } => {
   const bounds = imgRef.getBoundingClientRect();
   const left = bounds?.left as number;
   const top = bounds?.top as number;
@@ -16,10 +16,14 @@ const getPixelLocation = (
 
   const pixelX = Number(((x / clientWidth) * naturalWidth).toFixed(2));
   const pixelY = Number(((y / clientHeight) * naturalHeight).toFixed(2));
+  const cursorX = x;
+  const cursorY = y;
 
   return {
     pixelX,
     pixelY,
+    cursorX,
+    cursorY,
   };
 };
 
