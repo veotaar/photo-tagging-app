@@ -1,30 +1,27 @@
 import { useRef, useState } from 'react';
 import getPixelLocation from '../utils/getPixelLocation';
 import TargetSelectBox from './TargetSelectBox';
+import { foundItem } from '../utils/foundItem';
 
+type HiddenObjects = { A: { x: number; y: number }; B: { x: number; y: number }; C: { x: number; y: number } };
+
+type Location = { x: number; y: number };
 interface TaggableImageProps {
   imageSrc: string;
   alt: string;
-  hiddenObjectLocations: { name: string; location: [number, number] }[];
-  offset: number;
+  hiddenObjectLocations: HiddenObjects | undefined;
   children?: React.ReactNode;
 }
 
-const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObjectLocations, offset }) => {
+const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObjectLocations }) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [mouseLoc, setMouseLoc] = useState<{ x: number; y: number } | undefined>();
   const [mouseLocClient, setMouseLocClient] = useState<{ x: number; y: number } | undefined>();
 
-  const handleClick: React.MouseEventHandler<HTMLImageElement> = (e) => {
-    const xLoc = e.pageX;
-    const yLoc = e.pageY;
+  const handleClick: React.MouseEventHandler<HTMLImageElement> = () => {
+    const report = foundItem(hiddenObjectLocations as HiddenObjects, mouseLoc as Location, 45);
 
-    console.log('clicked on: ', xLoc, yLoc);
-    console.log('hidden object 1', hiddenObjectLocations.at(0)?.location);
-    console.log('offset', offset);
-
-    console.log(typeof imgRef.current);
-    console.log(imgRef.current);
+    console.log(report);
   };
 
   const handleMouseMove: React.MouseEventHandler<HTMLImageElement> = (e) => {
@@ -46,10 +43,8 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
   return (
     <div className="relative mx-auto mt-10 aspect-video max-w-3xl cursor-none overflow-hidden">
       <TargetSelectBox position={{ x: mouseLocClient?.x, y: mouseLocClient?.y }} />
-      <div className="pointer-events-none absolute bottom-2 right-2">
-        <p className="text-green-500">
-          x: {mouseLoc?.x} y: {mouseLoc?.y}
-        </p>
+      <div className="pointer-events-none absolute bottom-1 right-2">
+        <p className="text-green-500">{mouseLoc && `x: ${mouseLoc.x} y: ${mouseLoc.y}`}</p>
       </div>
       <img
         src={imageSrc}

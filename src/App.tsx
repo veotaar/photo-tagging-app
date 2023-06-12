@@ -1,20 +1,28 @@
-import { FC, useEffect } from 'react';
-import { getDocs, collection } from 'firebase/firestore';
+import { FC, useEffect, useState } from 'react';
+import { getDocs, collection, QuerySnapshot } from 'firebase/firestore';
 import TaggableImage from './components/TaggableImage';
 import { db } from './config/firebase';
+
+interface HiddenObjects {
+  A: { x: number; y: number };
+  B: { x: number; y: number };
+  C: { x: number; y: number };
+}
 
 const App: FC = () => {
   const locations = collection(db, 'locations');
 
+  const [hiddenObjectLocations, setHiddenObjectLocations] = useState<HiddenObjects>();
+
   useEffect(() => {
     const getLocs = async () => {
       try {
-        const data = await getDocs(locations);
+        const data = (await getDocs(locations)) as QuerySnapshot<HiddenObjects>;
         const filteredData = data.docs.map((doc) => ({
           ...doc.data(),
-          id: doc.id,
+          // id: doc.id,
         }));
-        console.log(filteredData.at(0));
+        setHiddenObjectLocations(filteredData.at(0));
       } catch (err) {
         console.error(err);
       }
@@ -28,8 +36,7 @@ const App: FC = () => {
       <TaggableImage
         imageSrc="waldo.png"
         alt="black bg with white letters"
-        offset={10}
-        hiddenObjectLocations={[{ name: 'A', location: [50, 60] }]}
+        hiddenObjectLocations={hiddenObjectLocations}
       />
     </div>
   );
