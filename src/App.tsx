@@ -33,6 +33,8 @@ const App: FC = () => {
 
   return (
     <div>
+      <p className="mt-4 text-center text-3xl text-white">Find and tag the letters A, B and C 😀</p>
+
       <TaggableImage
         imageSrc="waldo.png"
         alt="black bg with white letters"
