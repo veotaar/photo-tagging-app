@@ -1,9 +1,12 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 import getPixelLocation from '../utils/getPixelLocation';
 import TargetSelectBox from './TargetSelectBox';
 import { foundItem } from '../utils/foundItem';
 import TargetSelectMenu from './TargetSelectMenu';
+import { getTimeStamp } from '../utils/getTimeStamp';
+import { useIsGameOver } from '../contexts/GameProvider';
+import ResultScreen from './ResultScreen';
 
 type HiddenObjects = { A: { x: number; y: number }; B: { x: number; y: number }; C: { x: number; y: number } };
 
@@ -22,21 +25,42 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
   const [mouseLoc, setMouseLoc] = useState<{ x: number; y: number } | undefined>();
   const [mouseLocClient, setMouseLocClient] = useState<{ x: number; y: number } | undefined>();
   const [isGameRunning, setIsGameRunning] = useState(false);
+  const [isGameEnded, setIsGameEnded] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [clickedLocation, setClickedLocation] = useState({ x: 0, y: 0 });
   const [clickedObject, setClickedObject] = useState({ isFound: false, name: '' });
-  // const [startTime, setStartTime] = useState(0);
-  // const [endTime, setEndTime] = useState(0);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
 
-  const toggleMenu = () => {
+  const isGameOver = useIsGameOver();
+
+  const endGame = () => {
+    setIsGameRunning(false);
+    setIsGameEnded(true);
+  };
+
+  useEffect(() => {
+    if (isGameOver) {
+      endGame();
+    }
+  }, [isGameOver]);
+
+  const onOptionSelect = () => {
     setIsMenuOpen(!isMenuOpen);
+    setEndTime(getTimeStamp());
+  };
+
+  const startGame = () => {
+    setIsGameRunning(true);
+    setIsGameEnded(false);
+    setStartTime(getTimeStamp());
   };
 
   const handleClick: React.MouseEventHandler<HTMLImageElement> = () => {
     const report = foundItem(hiddenObjectLocations as HiddenObjects, mouseLoc as Location, 50);
     setClickedObject(report);
     setClickedLocation(mouseLocClient as Location);
-    toggleMenu();
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const handleMouseMove: React.MouseEventHandler<HTMLImageElement> = (e) => {
@@ -57,11 +81,11 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
 
   return (
     <div className="relative mx-auto mt-2 aspect-video max-w-3xl overflow-hidden border">
-      <div className={cn({ hidden: isGameRunning }, 'flex h-full w-full items-center justify-center')}>
+      <div className={cn({ hidden: isGameRunning || isGameEnded }, 'flex h-full w-full items-center justify-center')}>
         <button
           type="button"
           className="rounded border px-4 py-2 text-white hover:bg-white hover:text-black"
-          onClick={() => setIsGameRunning(true)}
+          onClick={startGame}
         >
           Start Game
         </button>
@@ -69,15 +93,17 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
       <TargetSelectMenu
         isActive={isMenuOpen}
         position={clickedLocation}
-        onClick={toggleMenu}
+        onClick={onOptionSelect}
         clickedOn={clickedObject}
         updateMessage={updateMessage}
       />
       <TargetSelectBox
         position={{ x: mouseLocClient?.x, y: mouseLocClient?.y }}
-        isActive={isGameRunning && !isMenuOpen}
+        isActive={isGameRunning && !isMenuOpen && !isGameEnded}
       />
-      <div className={cn({ hidden: !isGameRunning }, 'pointer-events-none absolute bottom-1 right-2 z-20')}>
+      <div
+        className={cn({ hidden: !isGameRunning || isGameEnded }, 'pointer-events-none absolute bottom-1 right-2 z-20')}
+      >
         <p className="text-green-500">{mouseLoc && `x: ${mouseLoc.x} y: ${mouseLoc.y}`}</p>
       </div>
       <img
@@ -87,6 +113,13 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
         className={cn({ hidden: !isGameRunning }, 'object-fill')}
         onClick={handleClick}
         onMouseMove={handleMouseMove}
+      />
+
+      <ResultScreen
+        duration={endTime - startTime}
+        isVisible={isGameEnded && !isGameRunning}
+        restart={startGame}
+        updateMessage={updateMessage}
       />
     </div>
   );

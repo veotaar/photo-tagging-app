@@ -33,9 +33,9 @@ const TargetSelectMenu: FC<TargetSelectMenuProps> = ({
 
   const dispatch = useGameDispatch() as React.Dispatch<Action>;
 
-  // TODO: dispatch changes
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (e: React.SyntheticEvent<EventTarget>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
+
     const selectedObject = e.target.dataset.option;
 
     if (clickedOn.isFound && selectedObject === clickedOn.name) {
