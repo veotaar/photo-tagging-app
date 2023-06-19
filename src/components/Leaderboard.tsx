@@ -1,38 +1,14 @@
-import { FC, useEffect, useState } from 'react';
-import { getDocs, collection, query, orderBy, limit } from 'firebase/firestore';
-import { db } from '../config/firebase';
-
 interface LeaderboardEntry {
   user: string;
   time: number;
   recordId: string;
 }
 
-const Leaderboard: FC = () => {
-  const leaderboardRef = collection(db, 'leaderboard');
+interface LeaderboardProps {
+  data: LeaderboardEntry[];
+}
 
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-
-  useEffect(() => {
-    const getLeaderboard = async () => {
-      try {
-        const q = query(leaderboardRef, orderBy('time', 'asc'), limit(100));
-        const snapshot = await getDocs(q);
-        const data: LeaderboardEntry[] = [];
-        snapshot.forEach((doc) => {
-          const { user, time, recordId } = doc.data();
-          data.push({ user, time, recordId });
-        });
-
-        setLeaderboard(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getLeaderboard();
-  }, []);
-
+const Leaderboard: React.FC<LeaderboardProps> = ({ data }) => {
   return (
     <div className="container mx-auto mt-10 max-w-2xl p-4 text-white">
       <h2 className="mb-4 text-center text-3xl font-bold">Leaderboard</h2>
@@ -45,7 +21,7 @@ const Leaderboard: FC = () => {
           </tr>
         </thead>
         <tbody>
-          {leaderboard.map((entry, index) => (
+          {data.map((entry, index) => (
             <tr key={entry.recordId}>
               <td className="border px-4 py-2 text-right">{index + 1}</td>
               <td className="border px-4 py-2">{entry.user}</td>
