@@ -1,9 +1,11 @@
 import { FC, useEffect, useState } from 'react';
 import { getDocs, collection, QuerySnapshot } from 'firebase/firestore';
+// import { signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import TaggableImage from './components/TaggableImage';
-import { db } from './config/firebase';
+import { db } from './config/firebase'; // TODO: add auth
 import Message from './components/Message';
 import GameProgress from './components/GameProgress';
+import Leaderboard from './components/Leaderboard';
 
 interface HiddenObjects {
   A: { x: number; y: number };
@@ -14,9 +16,27 @@ interface HiddenObjects {
 const App: FC = () => {
   const locations = collection(db, 'locations');
 
+  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>();
+
   const [hiddenObjectLocations, setHiddenObjectLocations] = useState<HiddenObjects>();
   const [messageText, setMessageText] = useState('Good luck!');
   const [messageSuccess, setMessageSuccess] = useState(true);
+
+  // const signIn = async () => {
+  //   await signInAnonymously(auth);
+  // };
+
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
+  //     setIsLoggedIn(true);
+  //   } else {
+  //     setIsLoggedIn(false);
+  //   }
+  // });
+
+  // useEffect(() => {
+  //   signIn();
+  // }, []);
 
   useEffect(() => {
     const getLocs = async () => {
@@ -51,6 +71,7 @@ const App: FC = () => {
         hiddenObjectLocations={hiddenObjectLocations}
         updateMessage={updateMessage}
       />
+      <Leaderboard />
     </div>
   );
 };

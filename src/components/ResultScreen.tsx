@@ -1,39 +1,52 @@
 import cn from 'classnames';
 import { useState } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
 import censor from '../utils/profanity';
 import { useGameDispatch } from '../contexts/GameProvider';
+import { db } from '../config/firebase';
 
 interface ResultProps {
   duration: number;
   isVisible: boolean;
   updateMessage: (message: string, success: boolean) => void;
   restart: () => void;
+  showInitialPage: () => void;
 }
 
 interface Action {
   type: string;
 }
 
-const ResultScreen: React.FC<ResultProps> = ({ duration, isVisible, restart, updateMessage }) => {
+const ResultScreen: React.FC<ResultProps> = ({ duration, isVisible, restart, updateMessage, showInitialPage }) => {
   const [playerName, setPlayerName] = useState('');
+
+  const leaderboard = collection(db, 'leaderboard');
 
   const dispatch = useGameDispatch() as React.Dispatch<Action>;
 
   const handleRestart = () => {
     restart();
     updateMessage(`Good luck!`, true);
-
     dispatch({ type: 'reset' });
+    setPlayerName('');
   };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setPlayerName(e.target.value);
   };
 
-  const handleSubmit: React.FormEventHandler = (e) => {
+  const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
-    console.log(playerName);
-    console.log(censor(playerName));
+    if (playerName.length < 3) return;
+    const filteredName = censor(playerName);
+    const data = { user: filteredName, time: duration, recordId: uuidv4() };
+    await addDoc(leaderboard, data);
+
+    updateMessage(`Successfully sent your time!`, true);
+    dispatch({ type: 'reset' });
+    setPlayerName('');
+    showInitialPage();
   };
 
   return (
@@ -49,6 +62,7 @@ const ResultScreen: React.FC<ResultProps> = ({ duration, isVisible, restart, upd
           type="text"
           className="rounded border-slate-300 bg-slate-900 text-lg text-white focus:ring-2 focus:ring-white"
           value={playerName}
+          minLength={3}
           onChange={handleChange}
         />
 

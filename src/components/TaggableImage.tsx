@@ -56,6 +56,11 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
     setStartTime(getTimeStamp());
   };
 
+  const showInitialPage = () => {
+    setIsGameRunning(false);
+    setIsGameEnded(false);
+  };
+
   const handleClick: React.MouseEventHandler<HTMLImageElement> = () => {
     const report = foundItem(hiddenObjectLocations as HiddenObjects, mouseLoc as Location, 50);
     setClickedObject(report);
@@ -120,6 +125,7 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
         isVisible={isGameEnded && !isGameRunning}
         restart={startGame}
         updateMessage={updateMessage}
+        showInitialPage={showInitialPage}
       />
     </div>
   );
