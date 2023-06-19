@@ -25,9 +25,10 @@ const App: FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hiddenObjectLocations, setHiddenObjectLocations] = useState<HiddenObjects>();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [messageText, setMessageText] = useState('Good luck!');
+  const [messageText, setMessageText] = useState(`Click and tag "A", "B" and "C"!`);
   const [messageSuccess, setMessageSuccess] = useState(true);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const getData = async () => {
       try {
@@ -49,7 +50,7 @@ const App: FC = () => {
         setIsLoading(false);
       } catch (err) {
         console.error(err);
-        console.log('errorrrrrr');
+        console.log('oops');
       }
     };
 
@@ -65,11 +66,11 @@ const App: FC = () => {
     <Loading />
   ) : (
     <div>
-      <p className="mt-4 text-center text-3xl text-white">Find and tag the letters A, B and C 😀</p>
+      <p className="mt-4 text-center text-3xl font-bold text-zinc-50">{`Where's Letters?`}</p>
       <Message text={messageText} isSuccessful={messageSuccess} />
       <GameProgress />
       <TaggableImage
-        imageSrc="waldo.png"
+        imageSrc="waldo.webp"
         alt="black bg with white letters"
         hiddenObjectLocations={hiddenObjectLocations}
         updateMessage={updateMessage}

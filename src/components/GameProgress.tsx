@@ -11,7 +11,10 @@ const GameProgress: React.FC = () => {
           <div
             key={obj.name}
             className={cn(
-              { 'bg-green-400 text-green-900': obj.isFound, 'bg-gray-800 text-gray-500': !obj.isFound },
+              {
+                ' bg-emerald-400 text-emerald-900': obj.isFound,
+                ' bg-zinc-800 text-zinc-500': !obj.isFound,
+              },
               'w-full rounded px-4 py-2 text-lg font-bold'
             )}
           >

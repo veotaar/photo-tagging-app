@@ -85,11 +85,11 @@ const TaggableImage: React.FC<TaggableImageProps> = ({ imageSrc, alt, hiddenObje
   };
 
   return (
-    <div className="relative mx-auto mt-2 aspect-video max-w-3xl overflow-hidden border">
+    <div className="relative mx-auto mt-2 aspect-video max-w-3xl overflow-hidden border border-zinc-400">
       <div className={cn({ hidden: isGameRunning || isGameEnded }, 'flex h-full w-full items-center justify-center')}>
         <button
           type="button"
-          className="rounded border px-4 py-2 text-white hover:bg-white hover:text-black"
+          className="rounded border px-4 py-2 text-zinc-50 hover:bg-zinc-50 hover:text-zinc-950"
           onClick={startGame}
         >
           Start Game

@@ -12,7 +12,7 @@ const Message: React.FC<MessageProps> = ({ text, isSuccessful }) => {
   return (
     <p
       className={cn(
-        { 'text-green-400': isSuccessful || isGameOver, 'text-red-500': !isSuccessful && !isGameOver },
+        { 'text-emerald-400': isSuccessful || isGameOver, 'text-orange-500': !isSuccessful && !isGameOver },
         'mt-10 text-center text-2xl'
       )}
     >

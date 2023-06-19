@@ -50,9 +50,9 @@ const ResultScreen: React.FC<ResultProps> = ({ duration, isVisible, restart, upd
   };
 
   return (
-    <div className={cn({ hidden: !isVisible }, 'mx-auto flex h-full w-64 flex-col justify-center gap-1 text-white')}>
+    <div className={cn({ hidden: !isVisible }, 'mx-auto flex h-full w-64 flex-col justify-center gap-2 text-zinc-50')}>
       <p className="text-xl">
-        Your time: <span className="text-green-400">{duration} ms</span>{' '}
+        Your time: <span className="text-emerald-400">{duration} ms</span>{' '}
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2 text-lg">
         {/* eslint-disable jsx-a11y/label-has-associated-control */}
@@ -60,7 +60,7 @@ const ResultScreen: React.FC<ResultProps> = ({ duration, isVisible, restart, upd
         <input
           id="player-name"
           type="text"
-          className="rounded border-slate-300 bg-slate-900 text-lg text-white focus:ring-2 focus:ring-white"
+          className="rounded border-slate-300 bg-zinc-800 text-lg text-zinc-50 focus:ring-2 focus:ring-white"
           value={playerName}
           minLength={3}
           onChange={handleChange}
@@ -70,7 +70,7 @@ const ResultScreen: React.FC<ResultProps> = ({ duration, isVisible, restart, upd
 
         <button
           type="submit"
-          className="rounded border border-white bg-white px-2 py-2 text-black hover:bg-black hover:text-white"
+          className="rounded border border-zinc-50 bg-zinc-50 px-2 py-2 text-zinc-950 hover:bg-zinc-200"
         >
           Submit
         </button>
@@ -79,7 +79,7 @@ const ResultScreen: React.FC<ResultProps> = ({ duration, isVisible, restart, upd
       <button
         type="button"
         onClick={handleRestart}
-        className="self-stretch rounded border border-white p-2 text-lg hover:bg-white hover:text-black"
+        className="self-stretch rounded border border-zinc-50 p-2 text-lg text-zinc-50 hover:bg-zinc-50 hover:text-zinc-950"
       >
         Play Again
       </button>

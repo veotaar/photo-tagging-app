@@ -46,7 +46,7 @@ const TargetSelectMenu: FC<TargetSelectMenuProps> = ({
       updateMessage(`That's not ${selectedObject}! Try again!`, false);
     }
     if (!clickedOn.isFound) {
-      updateMessage('There is nothing there! Try again!', false);
+      updateMessage(`That's something else! Try again!`, false);
     }
 
     onClick();
